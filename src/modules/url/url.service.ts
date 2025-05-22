@@ -35,15 +35,19 @@ export class UrlService {
     return `This action returns all url`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} url`;
+  async findOne(url: string) {
+    return await this.databaseService.url.findUnique({
+      where: {
+        url: `${this.host}/${url}`,
+      },
+    });
   }
 
-  update(id: number, updateUrlDto: UpdateUrlDto) {
+  update(id: string, updateUrlDto: UpdateUrlDto) {
     return `This action updates a #${id} url`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} url`;
   }
 }

@@ -1,4 +1,5 @@
 export default () => ({
+  host: process.env.ENVHOST,
   environment: process.env.NODE_ENV || 'development',
   redis: {
     host: process.env.REDIS_HOST,

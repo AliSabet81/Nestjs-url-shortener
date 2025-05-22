@@ -1,11 +1,34 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+
 import { CreateUrlDto } from './dto/create-url.dto';
 import { UpdateUrlDto } from './dto/update-url.dto';
+import { UidService } from '../../services/uid/uid.service';
+import { DatabaseService } from '../../database/database.service';
 
 @Injectable()
 export class UrlService {
-  create(createUrlDto: CreateUrlDto) {
-    return 'This action adds a new url';
+  private host: string;
+
+  constructor(
+    private readonly uidService: UidService,
+    private readonly databaseService: DatabaseService,
+    private readonly configService: ConfigService,
+  ) {}
+
+  onModuleInit() {
+    this.host = this.configService.getOrThrow<string>(`host`);
+  }
+
+  async create(createUrlDto: CreateUrlDto) {
+    const uid = this.uidService.generate(10);
+    const url = await this.databaseService.url.create({
+      data: {
+        ...createUrlDto,
+        url: `${this.host}/${uid}`,
+      },
+    });
+    return url;
   }
 
   findAll() {

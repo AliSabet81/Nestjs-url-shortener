@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  url_shortener_postgres: # Needs updating
+    image: postgres:alpine
+    container_name: url_shortener_postgres # Needs updating
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - '5432:5432'
+    volumes:
+      - url_shortener_postgres_data:/var/lib/postgresql/data # Needs updating
+
+  url_shortener_redis: # Needs updating
+    image: redis:alpine
+    container_name: url_shortener_redis # Needs updating
+    ports:
+      - '6379:6379'
+    volumes:
+      - url_shortener_redis_data:/data # Needs updating
+
+networks:
+  default:
+    name: url_shortener # Needs updating
+
+volumes:
+  url_shortener_postgres_data: # Needs updating
+  url_shortener_redis_data: # Needs updating

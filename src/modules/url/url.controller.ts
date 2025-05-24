@@ -7,11 +7,13 @@ import {
   Param,
   Delete,
   Res,
+  Query,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { Url } from '@prisma/client';
 
 import { UrlService } from './url.service';
+import { GetUrlsDto } from './dto/get-urls.dto';
 import { CreateUrlDto } from './dto/create-url.dto';
 import { UpdateUrlDto } from './dto/update-url.dto';
 import { UrlExistsPipe } from './pipes/url-exists/url-exists.pipe';
@@ -26,8 +28,8 @@ export class UrlController {
   }
 
   @Get('url')
-  findAll() {
-    return this.urlService.findAll();
+  findAll(@Query() queryParams: GetUrlsDto) {
+    return this.urlService.findAll(queryParams);
   }
 
   @Get(':uid')

@@ -1,6 +1,8 @@
+import { Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+import { GetUrlsDto } from './dto/get-urls.dto';
 import { CreateUrlDto } from './dto/create-url.dto';
 import { UpdateUrlDto } from './dto/update-url.dto';
 import { UidService } from '../../services/uid/uid.service';
@@ -31,8 +33,52 @@ export class UrlService {
     return url;
   }
 
-  findAll() {
-    return `This action returns all url`;
+  async findAll({ filter, page = 1, limit = 10 }: GetUrlsDto) {
+    const whereClause: Prisma.UrlWhereInput = filter
+      ? {
+          OR: [
+            { title: { contains: filter } },
+            { redirect: { contains: filter } },
+            { description: { contains: filter } },
+          ],
+        }
+      : {};
+
+    const skip = (page - 1) * limit;
+    const take = limit;
+
+    const data = await this.databaseService.url.findMany({
+      where: whereClause,
+      skip,
+      take,
+    });
+
+    const total = await this.databaseService.url.count({
+      where: whereClause,
+    });
+
+    let baseUrl = `${this.host}?limit=${limit}`;
+    if (filter) {
+      baseUrl += `&filter=${encodeURIComponent(filter)}`;
+    }
+
+    const totalPages = Math.ceil(total / limit);
+    const nextPage = page < totalPages ? `${baseUrl}&page=${page + 1}` : null;
+    const previousPage = page > 1 ? `${baseUrl}&page=${page - 1}` : null;
+
+    const meta = {
+      currentPage: page,
+      perPage: limit,
+      total,
+      totalPages,
+      nextPage,
+      previousPage,
+    };
+
+    return {
+      data,
+      meta,
+    };
   }
 
   async findOne(url: string) {

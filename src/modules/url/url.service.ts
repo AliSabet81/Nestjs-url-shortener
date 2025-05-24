@@ -43,11 +43,20 @@ export class UrlService {
     });
   }
 
-  update(id: string, updateUrlDto: UpdateUrlDto) {
-    return `This action updates a #${id} url`;
+  async update(id: number, updateUrlDto: UpdateUrlDto) {
+    return await this.databaseService.url.update({
+      where: {
+        id,
+      },
+      data: updateUrlDto,
+    });
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} url`;
+  async remove(id: number) {
+    return await this.databaseService.url.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

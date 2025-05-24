@@ -1,41 +1,41 @@
-import helmet from 'helmet';
-import { App } from 'supertest/types';
+import { HttpServer, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
-
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../src/app.module';
 import { CacheService } from '../src/core/cache/cache.service';
 import { DatabaseService } from '../src/database/database.service';
+import helmet from 'helmet';
 
-let app: INestApplication<App>;
-let server: App;
-// let configService: ConfigService;
-let databaseService: DatabaseService;
-let cacheService: CacheService;
+let app: INestApplication;
+let server: HttpServer;
+let moduleFixture: TestingModule;
+let cache: CacheService;
+let database: DatabaseService;
 
-beforeEach(async () => {
-  const moduleFixture: TestingModule = await Test.createTestingModule({
+beforeAll(async () => {
+  moduleFixture = await Test.createTestingModule({
     imports: [AppModule],
   }).compile();
 
+  // Apply consistent set up to main.ts
   app = moduleFixture.createNestApplication();
   app.use(helmet());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+
+  // Get instances of services
+  cache = moduleFixture.get<CacheService>(CacheService);
+  database = moduleFixture.get<DatabaseService>(DatabaseService);
+
   await app.init();
   server = app.getHttpServer();
-  // configService = app.get(ConfigService);
-  databaseService = app.get(DatabaseService);
-  cacheService = app.get(CacheService);
 });
 
 afterEach(async () => {
-  // after each test, reset the database and chache
-  await cacheService.reset();
-  await databaseService.resetDb();
+  await database.resetDb();
+  await cache.reset();
 });
 
 afterAll(async () => {
   await app.close();
 });
 
-export { server };
+export { server, app };

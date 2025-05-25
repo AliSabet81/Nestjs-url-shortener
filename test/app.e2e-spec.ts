@@ -1,5 +1,6 @@
-import { ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
+import { ValidationPipe } from '@nestjs/common';
+
 import { app, server } from './setup';
 
 describe('AppController (e2e)', () => {

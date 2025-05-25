@@ -1,8 +1,10 @@
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { UrlExistsPipe } from './url-exists.pipe';
-import { UrlService } from 'src/modules/url/url.service';
 import { Url } from '@prisma/client';
 import { NotFoundException } from '@nestjs/common';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
+
+import { UrlService } from '../../url.service';
+import { UrlExistsPipe } from './url-exists.pipe';
+
 describe('UrlExistsPipe', () => {
   let urlExistsPipe: UrlExistsPipe;
   let urlService: DeepMocked<UrlService>;

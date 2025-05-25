@@ -1,10 +1,11 @@
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
+
 import { UrlService } from './url.service';
 import { UidService } from '../../services/uid/uid.service';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '../../database/database.service';
-import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 describe('UrlService', () => {
   let urlService: UrlService;
   let uidService: DeepMocked<UidService>;

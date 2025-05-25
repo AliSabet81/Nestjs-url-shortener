@@ -1,8 +1,9 @@
-import { DatabaseService } from '../../database/database.service';
+import { ConfigService } from '@nestjs/config';
+
 import { app } from '../../../test/setup';
 import { UrlService } from './url.service';
-import { ConfigService } from '@nestjs/config';
 import { createManyUrls } from './test-utils';
+import { DatabaseService } from '../../database/database.service';
 
 describe('UrlService Integration test', () => {
   let urlService: UrlService;
